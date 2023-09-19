@@ -25,9 +25,8 @@ if __name__ == '__main__':
                     
                     x=int(line[0])
                     y=int(line[1])
-                    z=line[2] #we dont convert this to a float becasue we went to be able to recieve the message that we are at a cross
+                    z=line[2] #we dont convert this to a float becasue we went to be able to recieve the message that we are at a cross, which wont be an int
                     print([x,y,z])
-                    # linePos=float(line)
                 except:
                     print("packet dropped") #this is designed to catch when python shoves bits on 
                                       #top of each other. 
@@ -35,7 +34,8 @@ if __name__ == '__main__':
                 #ok so high numbers(highest 7000) on the line follwing mean I am too far to the LEFT,
                 #low numbers mean I am too far on the RIGHT, 3500 means I am at the middle
                 #below is a basic control law you can send to your motors, with an exeption if z is 'cross' and not a lineposition
-                if not z == 'cross': 
+            
+                if not z == 'cross': #im assuming that in your arduino code you will be setting z to the string 'cross' if you sense a cross, dont feel obligated to do it this way.  
                     leftMotor=100+.02*float(z)
                     rightMotor=250-.02*float(z)
                 #else:
