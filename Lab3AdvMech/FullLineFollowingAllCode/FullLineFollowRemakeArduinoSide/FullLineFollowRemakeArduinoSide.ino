@@ -41,8 +41,8 @@ void setup() {
 
 void loop() {
 
-    recvWithStartEndMarkers(); //this function is in charge of taking a peice of data that looks like <17.5,0,16> 
-                               //turning it into a string looking like 17.5,0,16 and then setting newdata to true,
+    recvWithStartEndMarkers(); //this function is in charge of taking a peice of data that looks like <17,16> 
+                               //turning it into a string looking like 17,16 and then setting newdata to true,
                                //letting the rest of the program know a packet of data is ready to be analyzed, does all this without blocking
                  
      
