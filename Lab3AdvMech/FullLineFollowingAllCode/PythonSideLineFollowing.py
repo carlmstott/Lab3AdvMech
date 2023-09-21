@@ -35,7 +35,7 @@ if __name__ == '__main__':
                 #below is a basic control law you can send to your motors, with an exeption if z is the string 'cross' and not a lineposition
             
                 if not z == 'cross': #im assuming that in your arduino code you will be setting z to the string 'cross' if you sense a cross, dont feel obligated to do it this way.  
-                    leftMotor=100+.02*int(z) #now that we are SURE that z isbt the string cross, we cast z to an int and recalculate leftMotor and rightMotor, 
+                    leftMotor=100+.02*int(z) #now that we are SURE that z isnt the string cross, we cast z to an int and recalculate leftMotor and rightMotor, 
                     rightMotor=250-.02*int(z)
                 #else:
                     #do something here like incrimenting a value you call 'lines_hit' to one higher, and writing code to make sure that some time (1 second should do it) 
