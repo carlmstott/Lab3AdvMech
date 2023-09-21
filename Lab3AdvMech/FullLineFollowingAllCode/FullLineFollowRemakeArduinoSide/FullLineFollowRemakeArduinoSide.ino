@@ -30,8 +30,8 @@ void setup() {
     Serial.begin(115200);
     qtr.setTypeRC(); //this allows us to read the line sensor from didgital pins
 
-    //arduino pin sensornames i am using: 11,8,7,6,21,22,23,16 cant use #6 its a buzzer
-    qtr.setSensorPins((const uint8_t[]){11, 8, 7, 15, 21, 22, 23, 16}, SensorCount);
+    //arduino pin sensornames I am using: 7, 18, 19, 20, 21, 22, 23, 6. UNHOOK THE BLUE JUMPER LABELED BUZZER ON THE ASTAR or pin 6 will cause the buzzer to activate.
+    qtr.setSensorPins((const uint8_t[]){7, 18, 19, 20, 21, 22, 23, 6}, SensorCount);
 
     calibrateSensors();
     Serial.println("<Arduino is ready>");
