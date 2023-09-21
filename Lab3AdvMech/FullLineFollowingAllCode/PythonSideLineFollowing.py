@@ -14,7 +14,7 @@ if __name__ == '__main__':
     while True:
         sendString('/dev/ttyACM0',115200,'<'+str(leftMotor)+','+str(rightMotor)+'>',0.0001)
         
-        if ser.in_waiting > 0:  
+        if ser.in_waiting > 0:  #we wait until the arduino has sent something to us before we try to read anything from the serial port.
                  
                 line = ser.readline().decode('utf-8')
                 line=line.split(',')
