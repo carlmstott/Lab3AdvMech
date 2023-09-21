@@ -26,8 +26,8 @@ if __name__ == '__main__':
                     z=line[2] #we dont convert this to a float becasue we went to be able to recieve the message that we are at a cross, which wont be an int. 
                     print([x,y,z])
                 except:
-                    print("packet dropped") #this is designed to catch when python shoves bits on 
-                                          #top of each other. 
+                    print("packet dropped") #this is designed to catch when python shoves bits on top of each other. 
+                                         
             
                 #Following is my control law, we're keeping it basic for now, writing good control law is your job
                 #ok so high numbers(highest 7000) on the line follwing mean I am too far to the LEFT,
