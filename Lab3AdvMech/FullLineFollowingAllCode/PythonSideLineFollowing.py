@@ -38,5 +38,6 @@ if __name__ == '__main__':
                     leftMotor=100+.02*int(z) #now that we are SURE that z isbt the string cross, we cast z to an int and recalculate leftMotor and rightMotor, 
                     rightMotor=250-.02*int(z)
                 #else:
-                    #do something here like setting a value you call 'lines_hit' to one higher, and writing code to make sure that some time (1 second should do it) 
-                    # passes between being able to incriment lines_hit so that it wont be incrimented a bunch of times when you hit your first cross
+                    #do something here like incrimenting a value you call 'lines_hit' to one higher, and writing code to make sure that some time (1 second should do it) 
+                    # passes between being able to incriment lines_hit so that it wont be incrimented a bunch of times when you hit your first cross. IE give your robot time to leave a cross
+                    #before allowing lines_hit to be incrimented again.
