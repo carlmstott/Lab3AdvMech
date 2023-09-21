@@ -111,8 +111,8 @@ void sendDataToRpi() {
      Serial.print(',');
      Serial.print(rightMotor);
      Serial.print(',');
-  //if(iscross == 1){ //this commented out if/else statement is a continuation of the example of logic used to send the rpi the string 'cross' of both left and right sensors see the line
-  //Serial.println('cross')
+  //if(iscross == 1){ //this commented out if/else statement is a continuation of the example of logic used to send the rpi the value 8000 both left and right sensors see the line, this is a value that LinePosition will never send, so you can have a catch in the Rpi code that checks if linePosition is greater than 7000
+  //Serial.println('8000')
   //iscross=0;
   //} else {
      Serial.println(linePosition);
