@@ -13,6 +13,7 @@ char tempChar[numChars]; // temporary array used for parsing
 //motor command variables
 int leftMotor; //int leftMotor
 int rightMotor;
+int isCross=0;
 
   
 boolean newData = false;
@@ -49,8 +50,8 @@ void loop() {
     if (newData == true) { //newData will be true when recvWithStartEndMarkers(); has finished recieving a whole set of data from Rpi (a set of data is denoted as being containted between <>)
       
       strcpy(tempChar, receivedChars); //this line makes a copy of recievedChars for parsing in parseData, I do this becasue strtok() will alter any string I give it,I want to preserve the origonal data
-      parseData(); //right now parseData only parses a string of 3 numbers seperated by commas into floats
-                   //so the string 17.5,0,16 becomes three floats; 17.5, 0, and 16
+      parseData(); //right now parseData only parses a string of 2 numbers seperated by commas into floats
+                   //so the string 17.5,16 becomes two floats; 17.5 and 16
       sendDataToRpi();
                    
     }
@@ -64,12 +65,8 @@ void loop() {
 
 void parseData(){
 
-  //an interesting bug I found is that a char that was created in the Rpi and sent over to the arduino has a much higer chance
-  //of being interpreted incorrectly by the c string functions (strtok, etc). I really have no idea why. I guess i need to
 
-
-
-  char *strtokIndexer; //doing char * allows strtok to increment across my string properly frankly im not sure why... my kingdom for a proper c++ class
+  char *strtokIndexer; //doing char * allows strtok to increment across my string properly frankly im not sure why... something to do with pointers that I dont expect students to understand
 
   
   strtokIndexer = strtok(tempChar,","); //sets strtokIndexer = to everything up to the first comma in tempChar /0 //this line is broken
@@ -80,8 +77,6 @@ void parseData(){
   rightMotor = atoi(strtokIndexer);
 
   
-
-
   //now that we have extracted the data from the Rpi as floats, we can use them to command actuators somewhere else in the code
   
 }
@@ -90,25 +85,38 @@ void parseData(){
 
 void sendDataToRpi() {
 
-   linePosition = qtr.readLineBlack(sensorValues);
+   linePosition = qtr.readLineBlack(sensorValues); //returns a value between 0 and 7000. if this value is 0 or 7000 it means your line sensor is 
+                                                  //on the right of the line, or on the left of the line. if linePosition is 3500, it means the line 
+                                                  //sensor is centered over the line
 
    //HEY THIS IS IMPORTANT!!!!!!
-   //Read the documentation on the QTR sensors if you want to learn more, but we can also examine what each individual sensor sees
-   //by examining sensorValues at spesific places, for example, the below code prints out the outputs from the 0 and 7 sensor:
+   //Read the documentation on the QTR sensors if you want to learn more, but as well as examining where the line is relative to the whole array of sensors, we can also examine what each INDIVIDUAL sensor sees
+   //by examining sensorValues at spesific places (AFTER the readLineBlack function has been called on it), for example, the below code prints out the outputs from the 0 and 7 sensor seperated by a comma:
    //   Serial.print(sensorValues[0]);
    //   Serial.print(',');
    //   Serial.println(sensorValues[7]);
-   //these range that can be printed here is 0-1000, 0 means that sensor is not over a line, and 1000 means it is directly over a line
-   //you need to  figure out how to use that you can examine the status of each individual sensor to tell the Rpi weather 
-   //your robot is over a line. My suggestion is to use an if statement that checks 2 sensors that usually wont both be seeing a line,
+   //these range that can be printed here is 0-1000, 0 means that the INDIVIDUAL sensor is not over a line, and 1000 means it is directly over a line
+   //you need to figure out how to use that you can examine the status of each individual sensor to tell the Rpi if 
+   //your robot is over a cross. My suggestion is to use an if statement that checks 2 sensors that usually wont both be seeing a line,
    //then change the value of lineposition to be the string 'cross'
+  //example logic to detect if your linesensor is over a cross:
+  //
+  //if(sensorValues[7] > 750 && sensorValues[0] >750){ //meaning both the far left and right sensors see a value above 750, meaning your robot is VERY LIKLY over a cross
+  // iscross=1; //now I will be sending the string 'cross' to the rpi INSTEAD of a number between 0-7000 that rearesents the line sensor array's position relative to the cross
+  //}
+  //
    //HEY THIS IS IMPORTANT!!!!!!
   
      Serial.print(leftMotor);
      Serial.print(',');
      Serial.print(rightMotor);
      Serial.print(',');
-     Serial.println(linePosition); //have this value change to 'cross' if your robot is on top of a cross.
+  //if(iscross == 1){ //this commented out if/else statement is a continuation of the example of logic used to send the rpi the string 'cross' of both left and right sensors see the line
+  //Serial.println('cross')
+  //iscross=0;
+  //} else {
+     Serial.println(linePosition);
+  //}
 newData = false;
 
 }
@@ -119,26 +127,6 @@ void commandMotors(){
 //analogWrite(3,leftMotor); 
 //analogWrite(2,rightMotor);
 //  
-}
-
-//==================================================================
-
-
-void calibrateSensors(){
-
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH); // turn on Arduino's LED to indicate we are in calibration mode
-                                   ///while calibrating, move the sensor over the line a couple times
-
-  // 2.5 ms RC read timeout (default) * 10 reads per calibrate() call
-  // = ~25 ms per calibrate() call.
-  // Call calibrate() 200 times to make calibration take about 5 seconds.
-  for (uint16_t i = 0; i < 200; i++)
-  {
-    qtr.calibrate();
-  }
-  digitalWrite(LED_BUILTIN, LOW); // turn off Arduino's LED to indicate we are through with calibration
-  
 }
 
 
@@ -177,3 +165,25 @@ void recvWithStartEndMarkers() {
         }
     }
 }
+
+//==================================================================
+
+void calibrateSensors(){
+
+  //THE SENSORS ONLY CALIBRATE WHEN YOU UPLOAD NEW ARDUINO CODE TO THE ASTAR. after that the sensors STAY calibrated as long as the Astar has power.
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH); // turn on Arduino's LED to indicate we are in calibration mode
+                                   ///while calibrating, move the sensor over the line a couple times
+
+  // 2.5 ms RC read timeout (default) * 10 reads per calibrate() call
+  // = ~25 ms per calibrate() call.
+  // Call calibrate() 200 times to make calibration take about 5 seconds.
+  for (uint16_t i = 0; i < 200; i++)
+  {
+    qtr.calibrate();
+  }
+  digitalWrite(LED_BUILTIN, LOW); // turn off Arduino's LED to indicate we are through with calibration
+  
+}
+
