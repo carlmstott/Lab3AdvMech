@@ -23,7 +23,7 @@ if __name__ == '__main__':
                     
                     x=int(line[0])
                     y=int(line[1])
-                    z=line[2] #we dont convert this to a float becasue we went to be able to recieve the message that we are at a cross, which wont be an int. 
+                    z=iny(line[2]) #we dont convert this to a float becasue we went to be able to recieve the message that we are at a cross, which wont be an int. 
                     print([x,y,z])
                 except:
                     print("packet dropped") #this is designed to catch when python shoves bits on top of each other. 
@@ -37,10 +37,11 @@ if __name__ == '__main__':
                 #below is a basic control law you can send to your motors, with an exeption if z is the string 'cross' and not a lineposition. Feel free to take insperation from this,
             #but you will need to impliment a state machine similar to what you made in lab 2 (including a way of counting time without blocking)
             
-                if not z == 'cross': #im assuming that in your arduino code you will be setting z to the string 'cross' if you sense a cross, dont feel obligated to do it this way.  
+                if not z < 7000: #im assuming that in your arduino code you will be setting z to the string 'cross' if you sense a cross, dont feel obligated to do it this way.  
                     leftMotor=100+.02*int(z) #now that we are SURE that z isnt the string cross, we cast z to an int and recalculate leftMotor and rightMotor, 
                     rightMotor=250-.02*int(z)
-                #else:
+                else:
+                    print('at intersetion')
                     #do something here like incrimenting a value you call 'lines_hit' to one higher, and writing code to make sure that some time (1 second should do it) 
                     # passes between being able to incriment lines_hit so that it wont be incrimented a bunch of times when you hit your first cross. IE give your robot time to leave a cross
                     #before allowing lines_hit to be incrimented again.
