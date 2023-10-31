@@ -47,7 +47,7 @@ if __name__ == '__main__':
             if crossCount < 2:
                 #rightMotor=int(((linePose-1000)/4000)*300 + 100) #maps leftmotor to be between 100 and 400, will be LOW if robot is to thr right of the line. keep these as ints, less bits being sent the better
                 #leftMotor=int(400-(((linePose-1000)/4000)*300))
-                rightMotor=int(np.interp(linePose,[1000,5000],[100,400])-40)
+                rightMotor=int(np.interp(linePose,[1000,5000],[100,400])-40) #interpelation functions that map our linesenor values to motorcommand values, made convient by the numpy library
                 leftMotor=int(np.interp(linePose,[1000,5000],[400,100])+40)
 
             if crossCount==2: #rotates the robot to the right until the line sensor lines up with the new line, which incriments crossCounter and moves me into my next state
