@@ -50,11 +50,11 @@ if __name__ == '__main__':
                 rightMotor=int(np.interp(linePose,[1000,5000],[100,400])-40)
                 leftMotor=int(np.interp(linePose,[1000,5000],[400,100])+40)
 
-            if crossCount==2: #should rotate robot to the right until the line sensor lines up with the new line
+            if crossCount==2: #rotates the robot to the right until the line sensor lines up with the new line, which incriments crossCounter and moves me into my next state
                 rightMotor=0
                 leftMotor=0
                 print("reached second cross")
-                time.sleep(500) #these pauses are for me to be able to clearly see when I change states
+                #time.sleep(500) #these pauses are for me to be able to clearly see when I change states
                 rightMotor=-150
                 leftMotor=150
             
@@ -64,7 +64,7 @@ if __name__ == '__main__':
                 leftMotor=int(np.interp(linePose,[1000,5000],[400,100])+40)
                 
             
-            if crossCount ==4: #now we've hit the right front cross, lets rotate to the left until the line sensor alignes with the line paralell to the goal board
+            if crossCount ==4: #now we've hit the right front cross, lets rotate to the left until the line sensor alignes with the line paralell to the goal board and causing the crossCount to incriment, which will exit us out of this state and into the next one
                 #time.sleep(1)
                 rightMotor=150
                 leftMotor=-150
